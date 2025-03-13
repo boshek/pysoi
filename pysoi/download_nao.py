@@ -4,15 +4,23 @@ import pandas as pd
 import numpy as np
 import io
 import calendar
-from .utils import check_response, abbr_month, download_with_cache
+from .utils import check_response, abbr_month
 
 
-def download_nao_data():
+def download_nao():
     """
     Download North Atlantic Oscillation data.
     
+    Surface sea-level pressure difference between the Subtropical (Azores) High and the Subpolar Low.
+    
     Returns:
-        DataFrame: NAO data
+        DataFrame with columns:
+        - Year: Year of record
+        - Month: Month of record
+        - NAO: North Atlantic Oscillation
+    
+    References:
+        https://www.ncdc.noaa.gov/teleconnections/nao/
     """
     nao_link = "https://www.cpc.ncep.noaa.gov/products/precip/CWlink/pna/norm.nao.monthly.b5001.current.ascii.table"
     
@@ -65,27 +73,3 @@ def download_nao_data():
     
     # Select and return desired columns
     return nao[["Year", "Month", "NAO"]]
-
-
-def download_nao(use_cache=False, file_path=None):
-    """
-    Download North Atlantic Oscillation data.
-    
-    Surface sea-level pressure difference between the Subtropical (Azores) High and the Subpolar Low.
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                   is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Year: Year of record
-        - Month: Month of record
-        - NAO: North Atlantic Oscillation
-    
-    References:
-        https://www.ncdc.noaa.gov/teleconnections/nao/
-    """
-    return download_with_cache(use_cache, file_path, download_nao_data)

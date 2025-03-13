@@ -3,15 +3,34 @@
 import pandas as pd
 import numpy as np
 import io
-from .utils import check_response, abbr_month, download_with_cache
+from .utils import check_response, abbr_month
 
 
-def download_oni_data():
+def download_oni():
     """
-    Download ONI data from NOAA.
+    Download Oceanic Nino Index data.
+    
+    The Oceanic Nino Index is average sea surface temperature in the Nino 3.4 
+    region (120W to 170W) averaged over three months. Phases are categorized by 
+    Oceanic Nino Index:
+    - Warm phase of El Nino/Southern Oscillation when 3-month average 
+      sea-surface temperature departure of positive 0.5 degC
+    - Cool phase of La Nina/Southern Oscillation when 3-month average 
+      sea-surface temperature departure of negative 0.5 degC
+    - Neutral phase is defined as when the three month temperature average 
+      is between +0.5 and -0.5 degC
     
     Returns:
-        DataFrame: ONI data
+        DataFrame with columns:
+        - Date: Date object 
+        - Month: Month of record
+        - Year: Year of record
+        - ONI: Oceanic Oscillation Index
+        - ONI_month_window: 3 month period over which the ONI is calculated
+        - phase: ENSO phase
+    
+    References:
+        https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml
     """
     oni_link = "http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/detrend.nino34.ascii.txt"
     
@@ -54,38 +73,3 @@ def download_oni_data():
     
     # Select and return desired columns
     return oni[["Year", "Month", "Date", "dSST3.4", "ONI", "ONI_month_window", "phase"]]
-
-
-def download_oni(use_cache=False, file_path=None):
-    """
-    Download Oceanic Nino Index data.
-    
-    The Oceanic Nino Index is average sea surface temperature in the Nino 3.4 
-    region (120W to 170W) averaged over three months. Phases are categorized by 
-    Oceanic Nino Index:
-    - Warm phase of El Nino/Southern Oscillation when 3-month average 
-      sea-surface temperature departure of positive 0.5 degC
-    - Cool phase of La Nina/Southern Oscillation when 3-month average 
-      sea-surface temperature departure of negative 0.5 degC
-    - Neutral phase is defined as when the three month temperature average 
-      is between +0.5 and -0.5 degC
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                   is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Date: Date object 
-        - Month: Month of record
-        - Year: Year of record
-        - ONI: Oceanic Oscillation Index
-        - ONI_month_window: 3 month period over which the ONI is calculated
-        - phase: ENSO phase
-    
-    References:
-        https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml
-    """
-    return download_with_cache(use_cache, file_path, download_oni_data)

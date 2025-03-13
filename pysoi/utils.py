@@ -1,10 +1,8 @@
 """Utility functions for the pysoi package."""
 
-import os
 import pandas as pd
 import numpy as np
 import requests
-from datetime import datetime
 import calendar
 
 
@@ -52,34 +50,3 @@ def check_response(url):
         return response.text
     except requests.ConnectionError:
         raise ConnectionError("A working internet connection is required to download and import the climate indices.")
-
-
-def download_with_cache(use_cache, file_path, download_function):
-    """
-    Download data with optional caching.
-    
-    Args:
-        use_cache: Whether to use cache
-        file_path: Path to cache file
-        download_function: Function to download the data
-        
-    Returns:
-        DataFrame: Downloaded data
-    """
-    # Check if cache file exists and should be used
-    if use_cache and file_path and os.path.exists(file_path):
-        return pd.read_csv(file_path, parse_dates=['Date'])
-    
-    # Check internet connection and download data
-    try:
-        data = download_function()
-    except (requests.ConnectionError, ConnectionError):
-        print("A working internet connection is required to download and import the climate indices.")
-        return None
-    
-    # Write to cache file if specified
-    if file_path:
-        os.makedirs(os.path.dirname(os.path.abspath(file_path)), exist_ok=True)
-        data.to_csv(file_path, index=False)
-    
-    return data

@@ -4,16 +4,27 @@ import pandas as pd
 import numpy as np
 import io
 import re
-from .utils import check_response, abbr_month, download_with_cache
+from .utils import check_response, abbr_month
 import calendar
 
 
-def download_soi_data():
+def download_soi():
     """
-    Download Southern Oscillation Index data from NOAA.
+    Download Southern Oscillation Index data.
+    
+    The Southern Oscillation Index is defined as the standardized difference 
+    between barometric readings at Darwin, Australia and Tahiti.
     
     Returns:
-        DataFrame: SOI data
+        DataFrame with columns:
+        - Date: Date object
+        - Month: Month of record
+        - Year: Year of record
+        - SOI: Southern Oscillation Index
+        - SOI_3MON_AVG: 3 Month Average Southern Oscillation Index
+    
+    References:
+        https://www.cpc.ncep.noaa.gov/data/indices/soi
     """
     soi_link = "https://www.cpc.ncep.noaa.gov/data/indices/soi"
     
@@ -80,30 +91,3 @@ def download_soi_data():
     soi['SOI_3MON_AVG'] = soi['SOI'].rolling(window=3, center=True).mean()
     
     return soi[['Year', 'Month', 'Date', 'SOI', 'SOI_3MON_AVG']]
-
-
-def download_soi(use_cache=False, file_path=None):
-    """
-    Download Southern Oscillation Index data.
-    
-    The Southern Oscillation Index is defined as the standardized difference 
-    between barometric readings at Darwin, Australia and Tahiti.
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                   is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Date: Date object
-        - Month: Month of record
-        - Year: Year of record
-        - SOI: Southern Oscillation Index
-        - SOI_3MON_AVG: 3 Month Average Southern Oscillation Index
-    
-    References:
-        https://www.cpc.ncep.noaa.gov/data/indices/soi
-    """
-    return download_with_cache(use_cache, file_path, download_soi_data)

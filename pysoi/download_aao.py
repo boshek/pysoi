@@ -3,15 +3,25 @@
 import pandas as pd
 import numpy as np
 import io
-from .utils import check_response, abbr_month, download_with_cache
+from .utils import check_response, abbr_month
 
 
-def download_aao_data():
+def download_aao():
     """
     Download Antarctic Oscillation data.
     
+    Projection of the monthly 700 hPa anomaly height field south of 20°S on the first EOF obtained
+    from the monthly 700 hPa height anomaly.
+    
     Returns:
-        DataFrame: AAO data
+        DataFrame with columns:
+        - Date: Date object
+        - Year: Year of record
+        - Month: Month of record
+        - AAO: Antarctic Oscillation
+    
+    References:
+        https://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/aao/aao.shtml
     """
     aao_link = "https://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/aao/monthly.aao.index.b79.current.ascii"
     
@@ -59,29 +69,3 @@ def download_aao_data():
     
     # Select and return desired columns
     return aao[["Year", "Month", "Date", "AAO"]]
-
-
-def download_aao(use_cache=False, file_path=None):
-    """
-    Download Antarctic Oscillation data.
-    
-    Projection of the monthly 700 hPa anomaly height field south of 20°S on the first EOF obtained
-    from the monthly 700 hPa height anomaly.
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                  is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Date: Date object
-        - Year: Year of record
-        - Month: Month of record
-        - AAO: Antarctic Oscillation
-    
-    References:
-        https://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/aao/aao.shtml
-    """
-    return download_with_cache(use_cache, file_path, download_aao_data)

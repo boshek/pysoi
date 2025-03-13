@@ -4,15 +4,25 @@ import pandas as pd
 import numpy as np
 import io
 import calendar
-from .utils import check_response, abbr_month, download_with_cache
+from .utils import check_response, abbr_month
 
 
-def download_ao_data():
+def download_ao():
     """
     Download Arctic Oscillation data.
     
+    Projection of the daily 1000 hPa anomaly height field north of 20°N on the first EOF obtained
+    from the monthly 1000 hPa height anomaly.
+    
     Returns:
-        DataFrame: AO data
+        DataFrame with columns:
+        - Date: Date object
+        - Year: Year of record
+        - Month: Month of record
+        - AO: Arctic Oscillation
+    
+    References:
+        https://www.ncdc.noaa.gov/teleconnections/ao/
     """
     ao_link = "https://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/monthly.ao.index.b50.current.ascii.table"
     
@@ -65,29 +75,3 @@ def download_ao_data():
     
     # Select and return desired columns
     return ao[["Year", "Month", "Date", "AO"]]
-
-
-def download_ao(use_cache=False, file_path=None):
-    """
-    Download Arctic Oscillation data.
-    
-    Projection of the daily 1000 hPa anomaly height field north of 20°N on the first EOF obtained
-    from the monthly 1000 hPa height anomaly.
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                   is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Date: Date object
-        - Year: Year of record
-        - Month: Month of record
-        - AO: Arctic Oscillation
-    
-    References:
-        https://www.ncdc.noaa.gov/teleconnections/ao/
-    """
-    return download_with_cache(use_cache, file_path, download_ao_data)

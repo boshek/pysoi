@@ -4,15 +4,30 @@ import pandas as pd
 import numpy as np
 import io
 import re
-from .utils import check_response, download_with_cache
+from .utils import check_response
 
 
-def download_mei_data():
+def download_mei():
     """
-    Download Multivariate ENSO Index Version 2 (MEI.v2) data.
+    Download Multivariate ENSO Index Version 2 (MEI.v2).
+    
+    MEI.v2 is based on EOF analysis of level pressure, sea surface temperature,
+    surface zonal winds, surface meridional winds, and Outgoing Longwave Radiation. 
+    The analysis is conducted for 12 partially overlapping 2-month "seasons".
+    
+    Warm phase is defined as MEI index greater or equal to 0.5. Cold phase is 
+    defined as MEI index lesser or equal to -0.5.
     
     Returns:
-        DataFrame: MEI data
+        DataFrame with columns:
+        - Date: Date object
+        - Month: Bi-monthly season of record
+        - Year: Year of record
+        - MEI: Multivariate ENSO Index Version 2
+        - Phase: ENSO phase
+    
+    References:
+        https://psl.noaa.gov/enso/mei/
     """
     mei_link = "https://www.esrl.noaa.gov/psd/enso/mei/data/meiv2.data"
     
@@ -109,34 +124,3 @@ def download_mei_data():
     
     # Select and return desired columns
     return mei[["Year", "Month", "Date", "MEI", "Phase"]]
-
-
-def download_mei(use_cache=False, file_path=None):
-    """
-    Download Multivariate ENSO Index Version 2 (MEI.v2).
-    
-    MEI.v2 is based on EOF analysis of level pressure, sea surface temperature,
-    surface zonal winds, surface meridional winds, and Outgoing Longwave Radiation. 
-    The analysis is conducted for 12 partially overlapping 2-month "seasons".
-    
-    Warm phase is defined as MEI index greater or equal to 0.5. Cold phase is 
-    defined as MEI index lesser or equal to -0.5.
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                   is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Date: Date object
-        - Month: Bi-monthly season of record
-        - Year: Year of record
-        - MEI: Multivariate ENSO Index Version 2
-        - Phase: ENSO phase
-    
-    References:
-        https://psl.noaa.gov/enso/mei/
-    """
-    return download_with_cache(use_cache, file_path, download_mei_data)

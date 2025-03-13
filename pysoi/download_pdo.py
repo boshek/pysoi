@@ -4,15 +4,32 @@ import pandas as pd
 import numpy as np
 import io
 from datetime import datetime
-from .utils import check_response, abbr_month, download_with_cache
+from .utils import check_response, abbr_month
 
 
-def download_pdo_data():
+def download_pdo():
     """
-    Download Pacific Decadal Oscillation data.
+    Download Pacific Decadal Oscillation Data.
+    
+    The PDO index is derived as the leading principal of monthly SST anomalies in the North Pacific Ocean,
+    poleward of 20N. The monthly mean global average SST anomalies are removed to separate this 
+    pattern of variability from any "global warming" signal that may be present in the data.
+    
+    The NCEI PDO index is based on NOAA's extended reconstruction of SSTs (ERSST Version 4). 
+    It is constructed by regressing the ERSST anomalies against the Mantua PDO index for their 
+    overlap period, to compute a PDO regression map for the North Pacific ERSST anomalies. 
+    The ERSST anomalies are then projected onto that map to compute the NCEI index. 
+    The NCEI PDO index closely follows the Mantua PDO index.
     
     Returns:
-        DataFrame: PDO data
+        DataFrame with columns:
+        - Date: Date object
+        - Month: Month of record
+        - Year: Year of record
+        - PDO: Pacific Decadal Oscillation index
+    
+    References:
+        Original PDO: https://oceanview.pfeg.noaa.gov/erddap/info/cciea_OC_PDO/index.html
     """
     # Construct the URL with current date
     current_date = datetime.now().strftime("%Y-%m-%d")
@@ -40,36 +57,3 @@ def download_pdo_data():
     
     # Select and return desired columns
     return pdo[["Year", "Month", "Date", "PDO"]]
-
-
-def download_pdo(use_cache=False, file_path=None):
-    """
-    Download Pacific Decadal Oscillation Data.
-    
-    The PDO index is derived as the leading principal of monthly SST anomalies in the North Pacific Ocean,
-    poleward of 20N. The monthly mean global average SST anomalies are removed to separate this 
-    pattern of variability from any "global warming" signal that may be present in the data.
-    
-    The NCEI PDO index is based on NOAA's extended reconstruction of SSTs (ERSST Version 4). 
-    It is constructed by regressing the ERSST anomalies against the Mantua PDO index for their 
-    overlap period, to compute a PDO regression map for the North Pacific ERSST anomalies. 
-    The ERSST anomalies are then projected onto that map to compute the NCEI index. 
-    The NCEI PDO index closely follows the Mantua PDO index.
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                   is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Date: Date object
-        - Month: Month of record
-        - Year: Year of record
-        - PDO: Pacific Decadal Oscillation index
-    
-    References:
-        Original PDO: https://oceanview.pfeg.noaa.gov/erddap/info/cciea_OC_PDO/index.html
-    """
-    return download_with_cache(use_cache, file_path, download_pdo_data)

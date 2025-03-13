@@ -2,15 +2,24 @@
 
 import pandas as pd
 import io
-from .utils import check_response, abbr_month, download_with_cache
+from .utils import check_response, abbr_month
 
 
-def download_npgo_data():
+def download_npgo():
     """
     Download North Pacific Gyre Oscillation data.
     
+    North Pacific Gyre Oscillation data also known as the Victoria mode.
+    
     Returns:
-        DataFrame: NPGO data
+        DataFrame with columns:
+        - Date: Date object
+        - Year: Year of record
+        - Month: Month of record
+        - NPGO: North Pacific Gyre Oscillation
+    
+    References:
+        http://www.oces.us/npgo/
     """
     npgo_link = "http://www.oces.us/npgo/data/NPGO.txt"
     
@@ -38,28 +47,3 @@ def download_npgo_data():
     
     # Select and return desired columns
     return npgo[["Year", "Month", "Date", "NPGO"]]
-
-
-def download_npgo(use_cache=False, file_path=None):
-    """
-    Download North Pacific Gyre Oscillation data.
-    
-    North Pacific Gyre Oscillation data also known as the Victoria mode.
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                   is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Date: Date object
-        - Year: Year of record
-        - Month: Month of record
-        - NPGO: North Pacific Gyre Oscillation
-    
-    References:
-        http://www.oces.us/npgo/
-    """
-    return download_with_cache(use_cache, file_path, download_npgo_data)
