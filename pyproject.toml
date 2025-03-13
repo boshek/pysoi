@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pysoi"
+version = "0.1.0"
+description = "Import Various Northern and Southern Hemisphere Climate Indices"
+readme = "README.md"
+requires-python = ">=3.6"
+license = {text = "GPL-3.0-or-later"}
+authors = [
+    {name = "Sam Albers", email = "sam.albers@gmail.com"},
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pandas>=1.0.0",
+    "requests>=2.24.0",
+    "numpy>=1.19.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/boshek/pysoi"
+"Bug Tracker" = "https://github.com/boshek/pysoi/issues"
+
+[tool.pytest]
+testpaths = ["tests"]
+
+[tool.pytest.ini_options]
+filterwarnings = ["ignore::DeprecationWarning"]
