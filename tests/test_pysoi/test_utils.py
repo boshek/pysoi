@@ -4,7 +4,7 @@ import pytest
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from pysoi.utils import abbr_month, check_response, download_with_cache
+from pysoi.utils import abbr_month, check_response
 
 
 def test_abbr_month():
@@ -61,45 +61,3 @@ def test_check_response_error():
             check_response(url)
     except Exception:
         pytest.skip("Could connect to non-existent URL")
-
-
-def test_download_with_cache():
-    """Test the download_with_cache function."""
-    import tempfile
-    import os
-    
-    # Create a mock download function
-    def mock_download():
-        return pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})
-    
-    # Create a temporary file for caching
-    with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as temp:
-        temp_path = temp.name
-    
-    try:
-        # Download data with caching enabled
-        data1 = download_with_cache(True, temp_path, mock_download)
-        
-        # Check that the file exists
-        assert os.path.exists(temp_path)
-        
-        # Modify the mock function to return different data
-        def mock_download_different():
-            return pd.DataFrame({'A': [7, 8, 9], 'B': [10, 11, 12]})
-        
-        # Download data again with caching enabled - should get the cached data
-        data2 = download_with_cache(True, temp_path, mock_download_different)
-        
-        # Data should be the same as the first download
-        pd.testing.assert_frame_equal(data1, data2)
-        
-        # Download without cache - should get the new data
-        data3 = download_with_cache(False, None, mock_download_different)
-        
-        # Data should be different
-        with pytest.raises(AssertionError):
-            pd.testing.assert_frame_equal(data1, data3)
-    finally:
-        # Clean up
-        if os.path.exists(temp_path):
-            os.remove(temp_path)

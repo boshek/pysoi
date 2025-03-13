@@ -33,35 +33,6 @@ def test_download_returns_dataframe(function_name):
         pytest.skip("No internet connection")
 
 
-def test_cache_functionality():
-    """Test that cache functionality works correctly."""
-    import tempfile
-    import os
-    
-    # Create a temporary file for caching
-    with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as temp:
-        temp_path = temp.name
-    
-    try:
-        # Download data with caching enabled
-        data1 = download_oni(use_cache=True, file_path=temp_path)
-        
-        # Check that the file exists
-        assert os.path.exists(temp_path)
-        
-        # Download data again with caching enabled
-        data2 = download_oni(use_cache=True, file_path=temp_path)
-        
-        # Both datasets should be identical
-        pd.testing.assert_frame_equal(data1, data2)
-    except Exception as e:
-        pytest.skip(f"Cache test failed: {e}")
-    finally:
-        # Clean up
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-
-
 def test_download_enso():
     """Test that the download_enso function works with different indices."""
     from pysoi import download_enso

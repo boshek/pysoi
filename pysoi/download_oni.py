@@ -37,9 +37,9 @@ def download_oni():
     # Get response
     response_text = check_response(oni_link)
     
-    # Read table
+    # Read table - use sep='\s+' instead of delim_whitespace to avoid deprecation warning
     oni = pd.read_csv(io.StringIO(response_text), 
-                      delim_whitespace=True,
+                      sep='\s+',
                       names=["Year", "Month", "TOTAL", "ClimAdjust", "dSST3.4"],
                       skiprows=1)
     
@@ -55,21 +55,33 @@ def download_oni():
     # Create 3 month average window
     oni['ONI'] = oni['dSST3.4'].rolling(window=3, center=True).mean()
     
-    # Create ONI month window
-    month_abbrs = oni['Month'].astype(str).str[0]
-    oni['ONI_month_window'] = np.nan
+    # Create ONI month window - initialize as string type to avoid dtype issues
+    oni['ONI_month_window'] = pd.Series(np.nan, index=oni.index, dtype='object')
     
+    # Get first letter of each month
+    month_abbrs = oni['Month'].astype(str).str[0]
+    
+    # Fill in the ONI month window values
     for i in range(1, len(oni) - 1):
         oni.loc[i, 'ONI_month_window'] = month_abbrs.iloc[i-1] + month_abbrs.iloc[i] + month_abbrs.iloc[i+1]
     
-    # Assign phase
+    # Assign phase - ensure all elements are strings to avoid dtype issues
     conditions = [
         (oni['ONI'] <= -0.5),
         (oni['ONI'] >= 0.5),
         (oni['ONI'] > -0.5) & (oni['ONI'] < 0.5)
     ]
     choices = ['Cool Phase/La Nina', 'Warm Phase/El Nino', 'Neutral Phase']
-    oni['phase'] = pd.Categorical(np.select(conditions, choices, default=np.nan))
+    
+    # Use Series.mask method to avoid numpy select dtype issues
+    oni['phase'] = pd.Series('', index=oni.index, dtype='object')
+    
+    # Apply conditions one by one
+    for condition, choice in zip(conditions, choices):
+        oni.loc[condition, 'phase'] = choice
+    
+    # Convert to categorical
+    oni['phase'] = pd.Categorical(oni['phase'])
     
     # Select and return desired columns
     return oni[["Year", "Month", "Date", "dSST3.4", "ONI", "ONI_month_window", "phase"]]

@@ -30,20 +30,22 @@ def download_npgo():
     data_lines = [line for line in response_text.splitlines() if not line.startswith('#')]
     clean_text = '\n'.join(data_lines)
     
-    # Read table
+    # Read table using sep instead of delim_whitespace to avoid deprecation warning
     npgo = pd.read_csv(io.StringIO(clean_text), 
-                       delim_whitespace=True,
+                       sep='\s+',
                        names=["Year", "Month", "NPGO"])
     
-    # Create Date column
-    npgo['Date'] = pd.to_datetime(npgo['Year'].astype(str) + '-' + 
-                                 npgo['Month'].astype(str) + '-01')
+    # Ensure Year and Month are integers
+    npgo['Year'] = npgo['Year'].astype(int)
+    npgo['Month'] = npgo['Month'].astype(int)
+    
+    # Create Date column with proper formatting
+    npgo['Date'] = pd.to_datetime(
+        pd.Series([f"{year}-{month:02d}-01" for year, month in zip(npgo['Year'], npgo['Month'])])
+    )
     
     # Create Month label
     npgo['Month'] = abbr_month(npgo['Date'])
-    
-    # Ensure Year is integer
-    npgo['Year'] = npgo['Year'].astype(int)
     
     # Select and return desired columns
     return npgo[["Year", "Month", "Date", "NPGO"]]

@@ -5,15 +5,29 @@ import numpy as np
 import io
 import calendar
 import re
-from .utils import check_response, abbr_month, download_with_cache
+from .utils import check_response, abbr_month
 
 
-def download_dmi_data():
+def download_dmi():
     """
-    Download Dipole Mode Index (DMI) data.
+    Download Dipole Mode Index (DMI).
+    
+    Intensity of the IOD is represented by anomalous SST gradient 
+    between the western equatorial Indian Ocean (50E-70E and 10S-10N) and the 
+    south eastern equatorial Indian Ocean (90E-110E and 10S-0N). 
+    This gradient is named as Dipole Mode Index (DMI). 
+    When the DMI is positive then, the phenomenon is refereed as the positive
+    IOD and when it is negative, it is refereed as negative IOD.
     
     Returns:
-        DataFrame: DMI data
+        DataFrame with columns:
+        - Year: Year of record
+        - Month: Month of record
+        - Date: Date object
+        - DMI: Dipole Mode Index
+    
+    References:
+        https://psl.noaa.gov/gcos_wgsp/Timeseries/DMI/
     """
     dmi_link = "https://psl.noaa.gov/gcos_wgsp/Timeseries/Data/dmi.had.long.data"
     
@@ -87,33 +101,3 @@ def download_dmi_data():
     
     # Select and return desired columns
     return dmi[["Year", "Month", "Date", "DMI"]]
-
-
-def download_dmi(use_cache=False, file_path=None):
-    """
-    Download Dipole Mode Index (DMI).
-    
-    Intensity of the IOD is represented by anomalous SST gradient 
-    between the western equatorial Indian Ocean (50E-70E and 10S-10N) and the 
-    south eastern equatorial Indian Ocean (90E-110E and 10S-0N). 
-    This gradient is named as Dipole Mode Index (DMI). 
-    When the DMI is positive then, the phenomenon is refereed as the positive
-    IOD and when it is negative, it is refereed as negative IOD.
-    
-    Args:
-        use_cache: Whether to use cache. If True, results will be cached in 
-                   memory if file_path is None or on disk if file_path is not None.
-        file_path: Path to file to save the data. If use_cache is False but file_path
-                   is not None, the results will be downloaded and saved on disk.
-    
-    Returns:
-        DataFrame with columns:
-        - Year: Year of record
-        - Month: Month of record
-        - Date: Date object
-        - DMI: Dipole Mode Index
-    
-    References:
-        https://psl.noaa.gov/gcos_wgsp/Timeseries/DMI/
-    """
-    return download_with_cache(use_cache, file_path, download_dmi_data)

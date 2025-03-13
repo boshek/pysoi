@@ -23,5 +23,6 @@ from .download_aao import download_aao
 from .download_pdo import download_pdo
 from .download_dmi import download_dmi
 from .download_asymsam import download_asymsam_monthly, download_asymsam_daily
+from .download_enso import download_enso
 
 __version__ = '0.1.0'
