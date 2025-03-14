@@ -3,8 +3,8 @@
 
 # PySOI - Climate Indices in Python
 
-[![License: GPL
-v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![PyPI version](https://badge.fury.io/py/pysoi.svg)](https://badge.fury.io/py/pysoi)
 
 A Python package to download and analyze climate indices including:
 
@@ -150,6 +150,54 @@ python tests/run_tests.py
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Development Setup
+
+1. Install development dependencies:
+
+```bash
+pip install -e ".[dev]"
+# or
+pip install -r dev-requirements.txt
+```
+
+2. Set up pre-commit hooks:
+
+```bash
+pre-commit install
+```
+
+This will automatically run linters and code formatters on your commits.
+
+### Publishing to PyPI
+
+1. Install publishing dependencies:
+
+```bash
+pip install -e ".[publish]"
+# or add to dev dependencies
+pip install -e ".[dev,publish]"
+```
+
+2. Build the package:
+
+```bash
+python -m build
+```
+
+3. Test with TestPyPI first (recommended):
+
+```bash
+python -m twine upload --repository testpypi dist/*
+```
+
+4. Upload to PyPI:
+
+```bash
+python -m twine upload dist/*
+```
+
+Alternatively, create a new GitHub release to trigger the automated publishing workflow.
 
 ## License
 

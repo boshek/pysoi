@@ -27,8 +27,44 @@ dependencies = [
 "Homepage" = "https://github.com/boshek/pysoi"
 "Bug Tracker" = "https://github.com/boshek/pysoi/issues"
 
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=3.5.0",
+    "black>=23.12.1",
+    "ruff>=0.1.9",
+    "mypy>=1.8.0",
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+]
+
+publish = [
+    "build>=1.0.3",
+    "twine>=4.0.2",
+    "wheel>=0.42.0",
+]
+
 [tool.pytest]
 testpaths = ["tests"]
 
 [tool.pytest.ini_options]
 filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.ruff]
+line-length = 88
+target-version = 'py38'
+select = ['E', 'F', 'I', 'W']
+ignore = []
+
+[tool.ruff.isort]
+known-first-party = ['pysoi']
+
+[tool.mypy]
+python_version = '3.8'
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
