@@ -33,9 +33,17 @@ def download_asymsam_monthly():
     # Read the CSV file directly
     try:
         data = pd.read_csv(asymsam_monthly_link, 
-                          dtype={'Lev': 'int32', 'Index': 'category', 'Value': 'float64', 'Value_normalized': 'float64'},
-                          parse_dates=['Date'])
+                                dtype={'lev': 'int32', 'index': 'category', 'mean_estimated': 'float64', 'mean_r.squared': 'float64'},
+                                parse_dates=['time'])
         
+        data = data.rename(columns = {
+            "lev": "Lev",
+            "index": "Index",
+            "time": "Date",
+            "mean_estimated": "Value",
+            "mean_r.squared": "Value_normalized"
+        })
+
         # Ensure Index is categorical with correct levels
         data['Index'] = pd.Categorical(data['Index'], categories=['sam', 'ssam', 'asam'], ordered=False)
         
