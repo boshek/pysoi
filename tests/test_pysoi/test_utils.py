@@ -9,8 +9,8 @@ from pysoi.utils import abbr_month, check_response
 
 def test_abbr_month():
     """Test the abbr_month function."""
-    # Create test dates
-    dates = pd.to_datetime(['2022-01-01', '2022-02-01', '2022-03-01', '2022-12-01'])
+    # Create test dates as a Series (not DatetimeIndex)
+    dates = pd.Series(pd.to_datetime(['2022-01-01', '2022-02-01', '2022-03-01', '2022-12-01']))
     
     # Call the function
     result = abbr_month(dates)
