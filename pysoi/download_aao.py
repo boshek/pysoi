@@ -46,11 +46,10 @@ def download_aao():
             aao_value = float(line[10:].strip())
             
             # Create date
-            date = pd.to_datetime(f"{year}-{month:02d}-01")
+            date = f"{year}-{month:02d}-01"
             
             data_list.append({
                 'Year': year,
-                'Month': date.strftime('%b'),
                 'Date': date,
                 'AAO': aao_value
             })
@@ -60,9 +59,13 @@ def download_aao():
     
     # Create DataFrame
     aao = pd.DataFrame(data_list)
+    # Create the date
+    aao['Date'] = pd.to_datetime(aao['Date'])
+
     
     # Convert Month to categorical
-    aao['Month'] = abbr_month(aao[['Date']])
+    aao['Month'] = abbr_month(aao['Date'])
+
     
     # Sort by date
     aao = aao.sort_values('Date').reset_index(drop=True)
