@@ -151,6 +151,24 @@ python tests/run_tests.py
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+### Development Setup
+
+1.  Install development dependencies:
+
+``` bash
+pip install -e ".[dev]"
+# or
+pip install -r dev-requirements.txt
+```
+
+2.  Set up pre-commit hooks:
+
+``` bash
+pre-commit install
+```
+
+This will automatically run linters and code formatters on your commits.
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0 - see
