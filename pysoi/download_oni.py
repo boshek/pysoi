@@ -39,7 +39,7 @@ def download_oni():
     
     # Read table - use sep='\s+' instead of delim_whitespace to avoid deprecation warning
     oni = pd.read_csv(io.StringIO(response_text), 
-                      sep='\s+',
+                      sep=r'\s+',
                       names=["Year", "Month", "TOTAL", "ClimAdjust", "dSST3.4"],
                       skiprows=1)
     

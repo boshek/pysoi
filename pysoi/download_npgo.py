@@ -32,7 +32,7 @@ def download_npgo():
     
     # Read table using sep instead of delim_whitespace to avoid deprecation warning
     npgo = pd.read_csv(io.StringIO(clean_text), 
-                       sep='\s+',
+                       sep=r'\s+',
                        names=["Year", "Month", "NPGO"])
     
     # Ensure Year and Month are integers
