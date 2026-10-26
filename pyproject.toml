@@ -22,13 +22,13 @@ dependencies = [
     "requests>=2.24.0",
     "numpy>=1.19.0",
 ]
+[project.optional-dependencies]
+dev = ["pytest"]
 
 [project.urls]
 "Homepage" = "https://github.com/boshek/pysoi"
 "Bug Tracker" = "https://github.com/boshek/pysoi/issues"
 
-[tool.pytest]
-testpaths = ["tests"]
-
 [tool.pytest.ini_options]
+testpaths = ["tests"]
 filterwarnings = ["ignore::DeprecationWarning"]
