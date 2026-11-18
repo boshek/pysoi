@@ -50,3 +50,32 @@ def check_response(url):
         return response.text
     except requests.ConnectionError:
         raise ConnectionError("A working internet connection is required to download and import the climate indices.")
+
+    
+def season_to_month(season: str) -> int:
+    """
+    From a 3-letter season code, extract the middle month and return it as an integer.
+
+    This method only accepts length 3 strings, so seasons like 'DJF' 
+    will return 1 for January, but does not accept season codes like 'JJAS'.
+    """
+    assert (type(season) == str and len(season) == 3), 'Please enter a 3-letter season code as a string'
+
+    seasons_dict = {
+        'DJF': 1,  
+        'JFM': 2,  
+        'FMA': 3,  
+        'MAM': 4,
+        'AMJ': 5,  
+        'MJJ': 6,  
+        'JJA': 7,  
+        'JAS': 8,
+        'ASO': 9,  
+        'SON': 10, 
+        'OND': 11, 
+        'NDJ': 12,
+    }
+
+    assert season in seasons_dict, f'Season `{season}` not found in seasons.\nAvailable options:{list(seasons_dict.keys())}'
+
+    return seasons_dict[season]

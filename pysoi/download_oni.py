@@ -32,7 +32,7 @@ def download_oni():
     References:
         https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml
     """
-    oni_link = "http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/detrend.nino34.ascii.txt"
+    oni_link = "https://www.cpc.ncep.noaa.gov/data/indices/detrend.nino34.ascii.txt"
     
     # Get response
     response_text = check_response(oni_link)

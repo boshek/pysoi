@@ -14,6 +14,7 @@ A Python package to download and analyze climate indices including:
 """
 
 from .download_oni import download_oni
+from .download_roni import download_roni
 from .download_ao import download_ao
 from .download_nao import download_nao
 from .download_soi import download_soi

@@ -4,7 +4,7 @@ import pytest
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from pysoi.utils import abbr_month, check_response
+from pysoi.utils import abbr_month, check_response, season_to_month
 
 
 def test_abbr_month():
@@ -61,3 +61,34 @@ def test_check_response_error():
             check_response(url)
     except Exception:
         pytest.skip("Could connect to non-existent URL")
+
+
+def test_season_to_month():
+    """Test the season_to_month function."""
+    # Create list of season codes to test against
+    seasons = ['DJF', 'JFM', 'FMA', 'MAM', 'AMJ', 'MJJ', 'JJA', 'JAS', 'ASO', 'SON', 'OND', 'NDJ']
+    
+    # Call the function
+    result = [season_to_month(season) for season in seasons]
+    
+    # Check that the month integers are correct
+    expected = np.arange(1, 13, 1).tolist()
+    assert result == expected
+
+
+def test_season_to_month_error():
+    """
+    Test that season_to_month raises an error withnon-string input,
+    with a season code that does not exist, and for a 4-letter season code.
+    """
+    # Check that the function only accepts string input
+    with pytest.raises(AssertionError):
+        season_to_month(1)
+
+    # Check that the function only accepts 3-letter season codes that exist
+    with pytest.raises(AssertionError):
+        season_to_month('JJS')
+
+    # Check that the function only accepts 3-letter season codes, not common 4-letter ones
+    with pytest.raises(AssertionError):
+        season_to_month('JJAS')

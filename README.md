@@ -10,6 +10,7 @@ A Python package to download and analyze climate indices including:
 
 - Southern Oscillation Index (SOI)
 - Oceanic Nino Index (ONI)
+- Relative Oceanic Nino Index (RONI)
 - North Pacific Gyre Oscillation (NPGO)
 - North Atlantic Oscillation (NAO)
 - Arctic Oscillation (AO)
@@ -77,6 +78,7 @@ indices:
 | Function | Description |
 |----|----|
 | `download_oni()` | Oceanic Nino Index |
+| `download_roni()` | Relative Oceanic Nino Index |
 | `download_soi()` | Southern Oscillation Index |
 | `download_npgo()` | North Pacific Gyre Oscillation |
 | `download_nao()` | North Atlantic Oscillation |
@@ -105,6 +107,11 @@ used to track ENSO.
 
 - **Oceanic Nino Index (ONI)**: Average sea surface temperature in the
   Nino 3.4 region (120W to 170W) averaged over three months.
+  - Warm phase (El Niño): ONI ≥ 0.5°C
+  - Cool phase (La Niña): ONI ≤ -0.5°C
+  - Neutral phase: -0.5°C \< ONI \< 0.5°C
+- **Relative Oceanic Nino Index (ONI)**: Average sea surface temperature in the
+  Nino 3.4 region (120W to 170W) averaged over three months, with the 1991-2020 climatology removed.
   - Warm phase (El Niño): ONI ≥ 0.5°C
   - Cool phase (La Niña): ONI ≤ -0.5°C
   - Neutral phase: -0.5°C \< ONI \< 0.5°C
@@ -166,6 +173,8 @@ Albers. The original R package can be found at
 
 - Oceanic Nino Index (ONI):
   <https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml>
+- Relative Oceanic Nino Index (RONI):
+  <https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/>
 - Southern Oscillation Index (SOI):
   <https://www.cpc.ncep.noaa.gov/data/indices/soi>
 - North Pacific Gyre Oscillation (NPGO): <http://www.oces.us/npgo/>
